@@ -5,16 +5,16 @@ namespace App\Http\Controllers;
 use App\Http\Requests\WorkerRequest;
 use App\Services\SpecializationService;
 use App\Services\WorkerService;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class WorkerController extends Controller
 {
-    private WorkerService $service;
+    private WorkerService $workerService;
+    private SpecializationService $specializationService;
 
-    public function __construct(WorkerService $service)
+    public function __construct(WorkerService $workerService, SpecializationService $specializationService)
     {
-        $this->service = $service;
+        $this->workerService = $workerService;
+        $this->specializationService = $specializationService;
     }
 
     /**
@@ -25,7 +25,7 @@ class WorkerController extends Controller
     public function index()
     {
         $title = 'Workers';
-        $workers = $this->service->paginate(config('app.pagination_count'));
+        $workers = $this->workerService->paginate(config('app.pagination_count'));
 
         return view('worker.index', compact('title', 'workers'));
     }
@@ -38,7 +38,7 @@ class WorkerController extends Controller
     public function create()
     {
         $title = 'Create worker';
-        $specializations = SpecializationService::all();
+        $specializations = $this->specializationService->all();
 
         return view('worker.create', compact('title', 'specializations'));
     }
@@ -51,7 +51,7 @@ class WorkerController extends Controller
      */
     public function store(WorkerRequest $request)
     {
-        $this->service->add($request);
+        $this->workerService->add($request);
 
         return redirect()->route('workers.index');
     }
@@ -65,7 +65,7 @@ class WorkerController extends Controller
     public function show($id)
     {
         $title = 'Worker';
-        $worker = $this->service->getById($id);
+        $worker = $this->workerService->getById($id);
 
         return view('worker.show', compact('title', 'worker'));
     }
@@ -79,8 +79,8 @@ class WorkerController extends Controller
     public function edit($id)
     {
         $title = 'Edit worker';
-        $worker = $this->service->getById($id);
-        $specializations = SpecializationService::all();
+        $worker = $this->workerService->getById($id);
+        $specializations = $this->specializationService->all();
 
         return view('worker.edit', compact('title', 'worker', 'specializations'));
     }
@@ -94,7 +94,7 @@ class WorkerController extends Controller
      */
     public function update(WorkerRequest $request, $id)
     {
-        $worker = $this->service->edit($id, $request);
+        $worker = $this->workerService->edit($id, $request);
 
         return redirect()->route('workers.show', $worker->id);
     }
@@ -107,7 +107,7 @@ class WorkerController extends Controller
      */
     public function destroy($id)
     {
-        $this->service->remove($id);
+        $this->workerService->remove($id);
 
         return redirect()->route('workers.index');
     }

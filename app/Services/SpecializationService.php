@@ -11,7 +11,7 @@ class SpecializationService
         return Specialization::paginate($count);
     }
 
-    public static function all()
+    public function all()
     {
         return Specialization::all();
     }

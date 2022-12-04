@@ -11,7 +11,7 @@ class UserService
         return User::paginate($count);
     }
 
-    public static function all()
+    public function all()
     {
         return User::all();
     }

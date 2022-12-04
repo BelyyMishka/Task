@@ -10,11 +10,13 @@ use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
-    private BookService $service;
+    private BookService $bookService;
+    private UserService $userService;
 
-    public function __construct(BookService $service)
+    public function __construct(BookService $bookService, UserService $userService)
     {
-        $this->service = $service;
+        $this->bookService = $bookService;
+        $this->userService = $userService;
     }
 
     /**
@@ -25,7 +27,7 @@ class BookController extends Controller
     public function index()
     {
         $title = 'Books';
-        $books = $this->service->paginate(config('app.pagination_count'));
+        $books = $this->bookService->paginate(config('app.pagination_count'));
 
         return view('book.index', compact('title', 'books'));
     }
@@ -38,7 +40,7 @@ class BookController extends Controller
     public function create()
     {
         $title = 'Create book';
-        $users = UserService::all();
+        $users = $this->userService->all();
 
         return view('book.create', compact('title', 'users'));
     }
@@ -51,7 +53,7 @@ class BookController extends Controller
      */
     public function store(BookRequest $request)
     {
-        $this->service->add($request);
+        $this->bookService->add($request);
 
         return redirect()->route('books.index');
     }
@@ -65,7 +67,7 @@ class BookController extends Controller
     public function show($id)
     {
         $title = 'Book';
-        $book = $this->service->getById($id);
+        $book = $this->bookService->getById($id);
 
         return view('book.show', compact('title', 'book'));
     }
@@ -79,8 +81,8 @@ class BookController extends Controller
     public function edit($id)
     {
         $title = 'Edit book';
-        $book = $this->service->getById($id);
-        $users = UserService::all();
+        $book = $this->bookService->getById($id);
+        $users = $this->userService->all();
 
         return view('book.edit', compact('title', 'book', 'users'));
     }
@@ -94,7 +96,7 @@ class BookController extends Controller
      */
     public function update(BookRequest $request, $id)
     {
-        $book = $this->service->edit($id, $request);
+        $book = $this->bookService->edit($id, $request);
 
         return redirect()->route('books.show', $book->id);
     }
@@ -107,7 +109,7 @@ class BookController extends Controller
      */
     public function destroy($id)
     {
-        $this->service->remove($id);
+        $this->bookService->remove($id);
 
         return redirect()->route('books.index');
     }

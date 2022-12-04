@@ -8,11 +8,11 @@ use Illuminate\Http\RedirectResponse;
 
 class SpecializationController extends Controller
 {
-    private SpecializationService $service;
+    private SpecializationService $specializationService;
 
-    public function __construct(SpecializationService $service)
+    public function __construct(SpecializationService $specializationService)
     {
-        $this->service = $service;
+        $this->specializationService = $specializationService;
     }
 
     /**
@@ -23,7 +23,7 @@ class SpecializationController extends Controller
     public function index()
     {
         $title = 'Specializations';
-        $specializations = $this->service->paginate(config('app.pagination_count'));
+        $specializations = $this->specializationService->paginate(config('app.pagination_count'));
 
         return view('specialization.index', compact('title', 'specializations'));
     }
@@ -48,7 +48,7 @@ class SpecializationController extends Controller
      */
     public function store(SpecializationRequest $request)
     {
-        $this->service->add($request);
+        $this->specializationService->add($request);
 
         return redirect()->route('specializations.index');
     }
@@ -62,7 +62,7 @@ class SpecializationController extends Controller
     public function show($id)
     {
         $title = 'Specialization';
-        $specialization = $this->service->getById($id);
+        $specialization = $this->specializationService->getById($id);
 
         return view('specialization.show', compact('title', 'specialization'));
     }
@@ -76,7 +76,7 @@ class SpecializationController extends Controller
     public function edit($id)
     {
         $title = 'Edit specialization';
-        $specialization = $this->service->getById($id);
+        $specialization = $this->specializationService->getById($id);
 
         return view('specialization.edit', compact('title', 'specialization'));
     }
@@ -90,7 +90,7 @@ class SpecializationController extends Controller
      */
     public function update(SpecializationRequest $request, $id)
     {
-        $specialization = $this->service->edit($id, $request);
+        $specialization = $this->specializationService->edit($id, $request);
 
         return redirect()->route('specializations.show', $specialization->id);
     }
@@ -103,7 +103,7 @@ class SpecializationController extends Controller
      */
     public function destroy($id)
     {
-        if (!$this->service->remove($id)) {
+        if (!$this->specializationService->remove($id)) {
             return redirect()->back()->with('error', 'This specialization has workers.');
         }
 

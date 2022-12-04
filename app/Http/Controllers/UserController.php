@@ -4,16 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
 use App\Services\UserService;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
-    private UserService $service;
+    private UserService $userService;
 
-    public function __construct(UserService $service)
+    public function __construct(UserService $userService)
     {
-        $this->service = $service;
+        $this->userService = $userService;
     }
 
     /**
@@ -24,7 +22,7 @@ class UserController extends Controller
     public function index()
     {
         $title = 'Users';
-        $users = $this->service->paginate(config('app.pagination_count'));
+        $users = $this->userService->paginate(config('app.pagination_count'));
 
         return view('user.index', compact('title', 'users'));
     }
@@ -49,7 +47,7 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-        $this->service->add($request);
+        $this->userService->add($request);
 
         return redirect()->route('users.index');
     }
@@ -63,7 +61,7 @@ class UserController extends Controller
     public function show($id)
     {
         $title = 'User';
-        $user = $this->service->getById($id);
+        $user = $this->userService->getById($id);
 
         return view('user.show', compact('title', 'user'));
     }
@@ -77,7 +75,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $title = 'Edit user';
-        $user = $this->service->getById($id);
+        $user = $this->userService->getById($id);
 
         return view('user.edit', compact('title', 'user'));
     }
@@ -91,7 +89,7 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, $id)
     {
-        $user = $this->service->edit($id, $request);
+        $user = $this->userService->edit($id, $request);
 
         return redirect()->route('users.show', $user->id);
     }
@@ -104,7 +102,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        if (!$this->service->remove($id)) {
+        if (!$this->userService->remove($id)) {
             return redirect()->back()->with('error', 'This user has books.');
         }
 
