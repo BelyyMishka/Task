@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SpecializationRequest;
+use App\Models\Specialization;
 use App\Services\SpecializationService;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 
 class SpecializationController extends Controller
@@ -56,13 +60,12 @@ class SpecializationController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @param Specialization $specialization
+     * @return Application|Factory|View
      */
-    public function show($id)
+    public function show(Specialization $specialization)
     {
         $title = 'Specialization';
-        $specialization = $this->specializationService->getById($id);
 
         return view('specialization.show', compact('title', 'specialization'));
     }
@@ -70,13 +73,12 @@ class SpecializationController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @param Specialization $specialization
+     * @return Application|Factory|View
      */
-    public function edit($id)
+    public function edit(Specialization $specialization)
     {
         $title = 'Edit specialization';
-        $specialization = $this->specializationService->getById($id);
 
         return view('specialization.edit', compact('title', 'specialization'));
     }
@@ -85,25 +87,25 @@ class SpecializationController extends Controller
      * Update the specified resource in storage.
      *
      * @param SpecializationRequest $request
-     * @param int $id
+     * @param Specialization $specialization
      * @return RedirectResponse
      */
-    public function update(SpecializationRequest $request, $id)
+    public function update(SpecializationRequest $request, Specialization $specialization)
     {
-        $specialization = $this->specializationService->edit($id, $request);
+        $specialization = $this->specializationService->edit($specialization, $request);
 
-        return redirect()->route('specializations.show', $specialization->id);
+        return redirect()->route('specializations.show', $specialization);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @param Specialization $specialization
+     * @return RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(Specialization $specialization)
     {
-        if (!$this->specializationService->remove($id)) {
+        if (!$this->specializationService->remove($specialization)) {
             return redirect()->back()->with('error', 'This specialization has workers.');
         }
 

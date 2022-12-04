@@ -18,7 +18,7 @@ class SpecializationService
 
     public function getById($id)
     {
-        return Specialization::findOrFail($id);
+        return Specialization::find($id);
     }
 
     public function add($request)
@@ -26,10 +26,8 @@ class SpecializationService
         return Specialization::add($request);
     }
 
-    public function remove($id)
+    public function remove($specialization)
     {
-        $specialization = $this->getById($id);
-
         if ($specialization->workers->count() > 0) {
             return false;
         }
@@ -38,10 +36,8 @@ class SpecializationService
         return true;
     }
 
-    public function edit($id, $request)
+    public function edit($specialization, $request)
     {
-        $specialization = $this->getById($id);
-
         return $specialization->edit($request);
     }
 }

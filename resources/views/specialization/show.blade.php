@@ -28,9 +28,9 @@
                                 @endif
                             </p>
                             <div>
-                                <a class="btn btn-warning" href="{{ route('specializations.edit', $specialization->id) }}">Edit</a>
+                                <a class="btn btn-warning" href="{{ route('specializations.edit', $specialization) }}">Edit</a>
 
-                                <form action="{{ route('specializations.destroy', $specialization->id) }}" method="POST"
+                                <form action="{{ route('specializations.destroy', $specialization) }}" method="POST"
                                       class="float-left">
                                     @method('DELETE')
                                     @csrf

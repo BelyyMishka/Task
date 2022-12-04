@@ -27,7 +27,7 @@
                                     <div class="mb-2">
                                         <small>{{ $specialization->getDate() }}</small>
                                     </div>
-                                    <a class="h4 d-block mb-3 text-secondary text-uppercase font-weight-bold" href="{{ route('specializations.show', $specialization->id) }}">{{ $specialization->name }}</a>
+                                    <a class="h4 d-block mb-3 text-secondary text-uppercase font-weight-bold" href="{{ route('specializations.show', $specialization) }}">{{ $specialization->name }}</a>
                                     <p class="m-0">
                                         @if(empty($specialization->description))
                                             Empty description
