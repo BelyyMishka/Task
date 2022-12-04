@@ -16,7 +16,7 @@
                         <div class="col-lg-12">
                             <div class="position-relative mb-3">
                                 <div class="bg-white border border-top-0 p-4">
-                                    <form role="form" method="POST" action="{{ route('users.update', $user->id) }}"
+                                    <form role="form" method="POST" action="{{ route('users.update', $user) }}"
                                           enctype="multipart/form-data">
                                         @csrf
                                         @method('PUT')

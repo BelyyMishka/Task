@@ -3,7 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Models\User;
 use App\Services\UserService;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class UserController extends Controller
 {
@@ -55,13 +60,12 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @param User $user
+     * @return Application|Factory|View
      */
-    public function show($id)
+    public function show(User $user)
     {
         $title = 'User';
-        $user = $this->userService->getById($id);
 
         return view('user.show', compact('title', 'user'));
     }
@@ -69,13 +73,12 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @param User $user
+     * @return Application|Factory|View
      */
-    public function edit($id)
+    public function edit(User $user)
     {
         $title = 'Edit user';
-        $user = $this->userService->getById($id);
 
         return view('user.edit', compact('title', 'user'));
     }
@@ -84,25 +87,25 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param UserRequest $request
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @param User $user
+     * @return RedirectResponse
      */
-    public function update(UserRequest $request, $id)
+    public function update(UserRequest $request, User $user)
     {
-        $user = $this->userService->edit($id, $request);
+        $user = $this->userService->edit($user, $request);
 
-        return redirect()->route('users.show', $user->id);
+        return redirect()->route('users.show', $user);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @param User $user
+     * @return RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        if (!$this->userService->remove($id)) {
+        if (!$this->userService->remove($user)) {
             return redirect()->back()->with('error', 'This user has books.');
         }
 

@@ -27,7 +27,7 @@
                                         <div class="mb-2">
                                             <small>{{ $user->getDate() }}</small>
                                         </div>
-                                        <a class="h4 d-block mb-3 text-secondary text-uppercase font-weight-bold" href="{{ route('users.show', $user->id) }}">{{ $user->name }}</a>
+                                        <a class="h4 d-block mb-3 text-secondary text-uppercase font-weight-bold" href="{{ route('users.show', $user) }}">{{ $user->name }}</a>
                                         <p class="m-0">
                                             @if(empty($user->description))
                                                 Empty description

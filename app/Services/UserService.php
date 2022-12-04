@@ -18,7 +18,7 @@ class UserService
 
     public function getById($id)
     {
-        return User::findOrFail($id);
+        return User::find($id);
     }
 
     public function add($request)
@@ -26,10 +26,8 @@ class UserService
         return User::add($request);
     }
 
-    public function remove($id)
+    public function remove($user)
     {
-        $user = $this->getById($id);
-
         if ($user->books->count() > 0) {
             return false;
         }
@@ -38,10 +36,8 @@ class UserService
         return true;
     }
 
-    public function edit($id, $request)
+    public function edit($user, $request)
     {
-        $user = $this->getById($id);
-
         return $user->edit($request);
     }
 }
