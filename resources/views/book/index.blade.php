@@ -27,7 +27,7 @@
                                         <div class="mb-2">
                                             <small>{{ $book->getDate() }}</small>
                                         </div>
-                                        <a class="h4 d-block mb-3 text-secondary text-uppercase font-weight-bold" href="{{ route('books.show', $book->id) }}">{{ $book->name }}</a>
+                                        <a class="h4 d-block mb-3 text-secondary text-uppercase font-weight-bold" href="{{ route('books.show', $book) }}">{{ $book->name }}</a>
                                         <p class="m-0">
                                             @if(empty($book->description))
                                                 Empty description

@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BookRequest;
+use App\Models\Book;
 use App\Services\BookService;
 use App\Services\UserService;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -61,13 +65,12 @@ class BookController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @param Book $book
+     * @return Application|Factory|View
      */
-    public function show($id)
+    public function show(Book $book)
     {
         $title = 'Book';
-        $book = $this->bookService->getById($id);
 
         return view('book.show', compact('title', 'book'));
     }
@@ -75,13 +78,12 @@ class BookController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @param Book $book
+     * @return Application|Factory|View
      */
-    public function edit($id)
+    public function edit(Book $book)
     {
         $title = 'Edit book';
-        $book = $this->bookService->getById($id);
         $users = $this->userService->all();
 
         return view('book.edit', compact('title', 'book', 'users'));
@@ -90,26 +92,26 @@ class BookController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param  int  $id
+     * @param BookRequest $request
+     * @param Book $book
      * @return RedirectResponse
      */
-    public function update(BookRequest $request, $id)
+    public function update(BookRequest $request, Book $book)
     {
-        $book = $this->bookService->edit($id, $request);
+        $book = $this->bookService->edit($book, $request);
 
-        return redirect()->route('books.show', $book->id);
+        return redirect()->route('books.show', $book);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param Book $book
      * @return RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(Book $book)
     {
-        $this->bookService->remove($id);
+        $this->bookService->remove($book);
 
         return redirect()->route('books.index');
     }
