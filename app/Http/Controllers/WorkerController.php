@@ -3,8 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\WorkerRequest;
+use App\Models\Worker;
 use App\Services\SpecializationService;
 use App\Services\WorkerService;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class WorkerController extends Controller
 {
@@ -59,13 +64,12 @@ class WorkerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @param Worker $worker
+     * @return Application|Factory|View
      */
-    public function show($id)
+    public function show(Worker $worker)
     {
         $title = 'Worker';
-        $worker = $this->workerService->getById($id);
 
         return view('worker.show', compact('title', 'worker'));
     }
@@ -76,10 +80,9 @@ class WorkerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function edit($id)
+    public function edit(Worker $worker)
     {
         $title = 'Edit worker';
-        $worker = $this->workerService->getById($id);
         $specializations = $this->specializationService->all();
 
         return view('worker.edit', compact('title', 'worker', 'specializations'));
@@ -89,25 +92,25 @@ class WorkerController extends Controller
      * Update the specified resource in storage.
      *
      * @param WorkerRequest $request
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @param Worker $worker
+     * @return RedirectResponse
      */
-    public function update(WorkerRequest $request, $id)
+    public function update(WorkerRequest $request, Worker $worker)
     {
-        $worker = $this->workerService->edit($id, $request);
+        $worker = $this->workerService->edit($worker, $request);
 
-        return redirect()->route('workers.show', $worker->id);
+        return redirect()->route('workers.show', $worker);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @param Worker $worker
+     * @return RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(Worker $worker)
     {
-        $this->workerService->remove($id);
+        $this->workerService->remove($worker);
 
         return redirect()->route('workers.index');
     }

@@ -18,7 +18,7 @@ class WorkerService
 
     public function getById($id)
     {
-        return Worker::with('specialization')->findOrFail($id);
+        return Worker::with('specialization')->find($id);
     }
 
     public function add($request)
@@ -35,9 +35,8 @@ class WorkerService
         return true;
     }
 
-    public function edit($id, $request)
+    public function edit($worker, $request)
     {
-        $worker = $this->getById($id);
         $worker = $worker->edit($request);
 
         return $worker->load('specialization');
