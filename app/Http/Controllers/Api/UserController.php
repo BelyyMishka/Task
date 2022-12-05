@@ -4,80 +4,82 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
+use App\Http\Resources\User\UserCollection;
+use App\Http\Resources\User\UserResource;
+use App\Models\User;
 use App\Services\UserService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
-    private UserService $service;
+    private UserService $userService;
 
-    public function __construct(UserService $service)
+    public function __construct(UserService $userService)
     {
-        $this->service = $service;
+        $this->userService = $userService;
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return UserCollection
      */
     public function index()
     {
-        $users = UserService::all();
+        $users = $this->userService->all();
 
-        return response()->json($users, 200);
+        return new UserCollection($users);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param UserRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return UserResource
      */
     public function store(UserRequest $request)
     {
-        $user = $this->service->add($request);
+        $user = $this->userService->add($request);
 
-        return response()->json($user, 201);
+        return new UserResource($user);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @param User $user
+     * @return UserResource
      */
-    public function show($id)
+    public function show(User $user)
     {
-        $user = $this->service->getById($id);
-
-        return response()->json($user, 200);
+        return new UserResource($user);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param UserRequest $request
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * @param User $user
+     * @return UserResource
      */
-    public function update(UserRequest $request, $id)
+    public function update(UserRequest $request, User $user)
     {
-        $user = $this->service->edit($id, $request);
+        $user = $this->userService->edit($user, $request);
 
-        return response()->json($user, 200);
+        return new UserResource($user);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @param User $user
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        if (!$this->service->remove($id)) {
+        if (!$this->userService->remove($user)) {
             return response()->json([
                 'error' => 'User has books',
             ], 400);
