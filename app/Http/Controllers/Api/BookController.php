@@ -4,80 +4,84 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BookRequest;
+use App\Http\Resources\Book\BookCollection;
+use App\Http\Resources\Book\BookResource;
+use App\Models\Book;
 use App\Services\BookService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class BookController extends Controller
 {
-    private BookService $service;
+    private BookService $bookService;
 
-    public function __construct(BookService $service)
+    public function __construct(BookService $bookService)
     {
-        $this->service = $service;
+        $this->bookService = $bookService;
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return BookCollection
      */
     public function index()
     {
-        $books = $this->service->all();
+        $books = $this->bookService->all();
 
-        return response()->json($books, 200);
+        return new BookCollection($books);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param BookRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return BookResource
      */
     public function store(BookRequest $request)
     {
-        $book = $this->service->add($request);
+        $book = $this->bookService->add($request);
 
-        return response()->json($book, 201);
+        return new BookResource($book);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @param Book $book
+     * @return BookResource
      */
-    public function show($id)
+    public function show(Book $book)
     {
-        $book = $this->service->getById($id);
+        $book = $book->load('author');
 
-        return response()->json($book, 200);
+        return new BookResource($book);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @param BookRequest $request
+     * @param Book $book
+     * @return BookResource
      */
-    public function update(BookRequest $request, $id)
+    public function update(BookRequest $request, Book $book)
     {
-        $book = $this->service->edit($id, $request);
+        $book = $this->bookService->edit($book, $request);
 
-        return response()->json($book, 200);
+        return new BookResource($book);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @param Book $book
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(Book $book)
     {
-        $this->service->remove($id);
+        $this->bookService->remove($book);
 
         return response()->json([], 204);
     }
