@@ -4,80 +4,82 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SpecializationRequest;
+use App\Http\Resources\Specialization\SpecializationCollection;
+use App\Http\Resources\Specialization\SpecializationResource;
+use App\Models\Specialization;
 use App\Services\SpecializationService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class SpecializationController extends Controller
 {
-    private SpecializationService $service;
+    private SpecializationService $specializationService;
 
-    public function __construct(SpecializationService $service)
+    public function __construct(SpecializationService $specializationService)
     {
-        $this->service = $service;
+        $this->specializationService = $specializationService;
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return SpecializationCollection
      */
     public function index()
     {
-        $specializations = SpecializationService::all();
+        $specializations = $this->specializationService->all();
 
-        return response()->json($specializations, 200);
+        return new SpecializationCollection($specializations);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param SpecializationRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return SpecializationResource
      */
     public function store(SpecializationRequest $request)
     {
-        $specialization = $this->service->add($request);
+        $specialization = $this->specializationService->add($request);
 
-        return response()->json($specialization, 201);
+        return new SpecializationResource($specialization);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @param Specialization $specialization
+     * @return SpecializationResource
      */
-    public function show($id)
+    public function show(Specialization $specialization)
     {
-        $specialization = $this->service->getById($id);
-
-        return response()->json($specialization, 200);
+        return new SpecializationResource($specialization);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param SpecializationRequest $request
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * @param Specialization $specialization
+     * @return SpecializationResource
      */
-    public function update(SpecializationRequest $request, $id)
+    public function update(SpecializationRequest $request, Specialization $specialization)
     {
-        $specialization = $this->service->edit($id, $request);
+        $specialization = $this->specializationService->edit($specialization, $request);
 
-        return response()->json($specialization, 200);
+        return new SpecializationResource($specialization);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @param Specialization $specialization
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(Specialization $specialization)
     {
-        if (!$this->service->remove($id)) {
+        if (!$this->specializationService->remove($specialization)) {
             return response()->json([
                 'error' => 'Specialization has workers',
             ], 400);
