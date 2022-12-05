@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WorkerRequest;
+use App\Http\Resources\Worker\WorkerCollection;
+use App\Http\Resources\Worker\WorkerResource;
+use App\Models\Worker;
 use App\Services\WorkerService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,49 +14,49 @@ use Illuminate\Http\Response;
 
 class WorkerController extends Controller
 {
-    private WorkerService $service;
+    private WorkerService $workerService;
 
-    public function __construct(WorkerService $service)
+    public function __construct(WorkerService $workerService)
     {
-        $this->service = $service;
+        $this->workerService = $workerService;
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return WorkerCollection
      */
     public function index()
     {
-        $workers = $this->service->all();
+        $workers = $this->workerService->all();
 
-        return response()->json($workers, 200);
+        return new WorkerCollection($workers);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param WorkerRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return WorkerResource
      */
     public function store(WorkerRequest $request)
     {
-        $worker = $this->service->add($request);
+        $worker = $this->workerService->add($request);
 
-        return response()->json($worker, 201);
+        return new WorkerResource($worker);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @param Worker $worker
+     * @return WorkerResource
      */
-    public function show($id)
+    public function show(Worker $worker)
     {
-        $worker = $this->service->getById($id);
+        $worker = $worker->load('specialization');
 
-        return response()->json($worker, 200);
+        return new WorkerResource($worker);
     }
 
     /**
@@ -61,24 +64,24 @@ class WorkerController extends Controller
      *
      * @param WorkerRequest $request
      * @param int $id
-     * @return JsonResponse
+     * @return WorkerResource
      */
-    public function update(WorkerRequest $request, $id)
+    public function update(WorkerRequest $request, Worker $worker)
     {
-        $worker = $this->service->edit($id, $request);
+        $worker = $this->workerService->edit($worker, $request);
 
-        return response()->json($worker, 200);
+        return new WorkerResource($worker);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param Worker $worker
      * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(Worker $worker)
     {
-        $this->service->remove($id);
+        $this->workerService->remove($worker);
 
         return response()->json([], 204);
     }
