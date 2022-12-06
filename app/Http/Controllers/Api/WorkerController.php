@@ -4,13 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WorkerRequest;
-use App\Http\Resources\Worker\WorkerCollection;
 use App\Http\Resources\Worker\WorkerResource;
 use App\Models\Worker;
 use App\Services\WorkerService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class WorkerController extends Controller
 {
@@ -24,13 +21,13 @@ class WorkerController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return WorkerCollection
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
         $workers = $this->workerService->all();
 
-        return new WorkerCollection($workers);
+        return WorkerResource::collection($workers);
     }
 
     /**
@@ -41,7 +38,8 @@ class WorkerController extends Controller
      */
     public function store(WorkerRequest $request)
     {
-        $worker = $this->workerService->add($request);
+        $data = $request->all();
+        $worker = $this->workerService->add($data);
 
         return new WorkerResource($worker);
     }
@@ -54,8 +52,6 @@ class WorkerController extends Controller
      */
     public function show(Worker $worker)
     {
-        $worker = $worker->load('specialization');
-
         return new WorkerResource($worker);
     }
 
@@ -63,12 +59,13 @@ class WorkerController extends Controller
      * Update the specified resource in storage.
      *
      * @param WorkerRequest $request
-     * @param int $id
+     * @param Worker $worker
      * @return WorkerResource
      */
     public function update(WorkerRequest $request, Worker $worker)
     {
-        $worker = $this->workerService->edit($worker, $request);
+        $data = $request->all();
+        $worker = $this->workerService->edit($worker, $data);
 
         return new WorkerResource($worker);
     }

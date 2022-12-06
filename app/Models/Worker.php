@@ -6,6 +6,7 @@ use App\Traits\Date;
 use App\Traits\Image;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class Worker extends Model
 {
@@ -21,15 +22,15 @@ class Worker extends Model
         return $this->belongsTo(Specialization::class);
     }
 
-    public static function add($request)
+    public static function add(array $data)
     {
         $worker = new Worker();
-        $worker->name = $request->name;
-        $worker->description = $request->description;
-        $worker->specialization_id = $request->specialization_id;
+        $worker->name = $data['name'];
+        $worker->description = $data['description'];
+        $worker->specialization_id = $data['specialization_id'];
 
-        if ($request->hasFile('image')) {
-            $path = static::addImage($request->file('image'));
+        if (Arr::has($data, 'image')) {
+            $path = static::addImage($data['image']);
             $worker->image = $path;
         }
 
@@ -46,14 +47,14 @@ class Worker extends Model
         return true;
     }
 
-    public function edit($request)
+    public function edit(array $data)
     {
-        $this->name = $request->name;
-        $this->description = $request->description;
-        $this->specialization_id = $request->specialization_id;
+        $this->name = $data['name'];
+        $this->description = $data['description'];
+        $this->specialization_id = $data['specialization_id'];
 
-        if ($request->hasFile('image')) {
-            $path = $this->editImage($request->file('image'));
+        if (Arr::has($data, 'image')) {
+            $path = $this->editImage($data['image']);
             $this->image = $path;
         }
 

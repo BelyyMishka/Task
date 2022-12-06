@@ -16,29 +16,23 @@ class WorkerService
         return Worker::with('specialization')->get();
     }
 
-    public function getById($id)
+    public function add(array $data)
     {
-        return Worker::with('specialization')->find($id);
+        $worker = Worker::add($data);
+
+        return $worker;
     }
 
-    public function add($request)
+    public function remove($worker)
     {
-        $worker = Worker::add($request);
-
-        return $worker->load('specialization');
-    }
-
-    public function remove($id)
-    {
-        $worker = $this->getById($id);
         $worker->remove();
         return true;
     }
 
-    public function edit($worker, $request)
+    public function edit($worker, array $data)
     {
-        $worker = $worker->edit($request);
+        $worker = $worker->edit($data);
 
-        return $worker->load('specialization');
+        return $worker;
     }
 }

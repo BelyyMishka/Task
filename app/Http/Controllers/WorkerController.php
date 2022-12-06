@@ -52,11 +52,12 @@ class WorkerController extends Controller
      * Store a newly created resource in storage.
      *
      * @param WorkerRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function store(WorkerRequest $request)
     {
-        $this->workerService->add($request);
+        $data = $request->all();
+        $this->workerService->add($data);
 
         return redirect()->route('workers.index');
     }
@@ -77,8 +78,8 @@ class WorkerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @param Worker $worker
+     * @return Application|Factory|View
      */
     public function edit(Worker $worker)
     {
@@ -97,7 +98,8 @@ class WorkerController extends Controller
      */
     public function update(WorkerRequest $request, Worker $worker)
     {
-        $worker = $this->workerService->edit($worker, $request);
+        $data = $request->all();
+        $worker = $this->workerService->edit($worker, $data);
 
         return redirect()->route('workers.show', $worker);
     }
