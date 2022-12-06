@@ -52,7 +52,8 @@ class SpecializationController extends Controller
      */
     public function store(SpecializationRequest $request)
     {
-        $this->specializationService->add($request);
+        $data = $request->all();
+        $this->specializationService->add($data);
 
         return redirect()->route('specializations.index');
     }
@@ -92,7 +93,8 @@ class SpecializationController extends Controller
      */
     public function update(SpecializationRequest $request, Specialization $specialization)
     {
-        $specialization = $this->specializationService->edit($specialization, $request);
+        $data = $request->all();
+        $specialization = $this->specializationService->edit($specialization, $data);
 
         return redirect()->route('specializations.show', $specialization);
     }

@@ -6,6 +6,7 @@ use App\Traits\Date;
 use App\Traits\Image;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class Specialization extends Model
 {
@@ -21,14 +22,14 @@ class Specialization extends Model
         return $this->hasMany(Worker::class);
     }
 
-    public static function add($request)
+    public static function add(array $data)
     {
         $specialization = new Specialization();
-        $specialization->name = $request->name;
-        $specialization->description = $request->description;
+        $specialization->name = $data['name'];
+        $specialization->description = $data['description'];
 
-        if ($request->hasFile('image')) {
-            $path = static::addImage($request->file('image'));
+        if (Arr::has($data, 'image')) {
+            $path = static::addImage($data['image']);
             $specialization->image = $path;
         }
 
@@ -45,13 +46,13 @@ class Specialization extends Model
         return true;
     }
 
-    public function edit($request)
+    public function edit(array $data)
     {
-        $this->name = $request->name;
-        $this->description = $request->description;
+        $this->name = $data['name'];
+        $this->description = $data['description'];
 
-        if ($request->hasFile('image')) {
-            $path = $this->editImage($request->file('image'));
+        if (Arr::has($data, 'image')) {
+            $path = $this->editImage($data['image']);
             $this->image = $path;
         }
 

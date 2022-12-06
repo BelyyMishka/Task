@@ -4,13 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SpecializationRequest;
-use App\Http\Resources\Specialization\SpecializationCollection;
 use App\Http\Resources\Specialization\SpecializationResource;
 use App\Models\Specialization;
 use App\Services\SpecializationService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class SpecializationController extends Controller
 {
@@ -24,13 +21,13 @@ class SpecializationController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return SpecializationCollection
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
         $specializations = $this->specializationService->all();
 
-        return new SpecializationCollection($specializations);
+        return SpecializationResource::collection($specializations);
     }
 
     /**
@@ -41,7 +38,8 @@ class SpecializationController extends Controller
      */
     public function store(SpecializationRequest $request)
     {
-        $specialization = $this->specializationService->add($request);
+        $data = $request->all();
+        $specialization = $this->specializationService->add($data);
 
         return new SpecializationResource($specialization);
     }
@@ -66,7 +64,8 @@ class SpecializationController extends Controller
      */
     public function update(SpecializationRequest $request, Specialization $specialization)
     {
-        $specialization = $this->specializationService->edit($specialization, $request);
+        $data = $request->all();
+        $specialization = $this->specializationService->edit($specialization, $data);
 
         return new SpecializationResource($specialization);
     }

@@ -16,14 +16,9 @@ class SpecializationService
         return Specialization::all();
     }
 
-    public function getById($id)
+    public function add(array $data)
     {
-        return Specialization::find($id);
-    }
-
-    public function add($request)
-    {
-        return Specialization::add($request);
+        return Specialization::add($data);
     }
 
     public function remove($specialization)
@@ -36,8 +31,8 @@ class SpecializationService
         return true;
     }
 
-    public function edit($specialization, $request)
+    public function edit($specialization, array $data)
     {
-        return $specialization->edit($request);
+        return $specialization->edit($data);
     }
 }
