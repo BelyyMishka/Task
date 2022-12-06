@@ -52,7 +52,8 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-        $this->userService->add($request);
+        $data = $request->all();
+        $this->userService->add($data);
 
         return redirect()->route('users.index');
     }
@@ -92,7 +93,8 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, User $user)
     {
-        $user = $this->userService->edit($user, $request);
+        $data = $request->all();
+        $user = $this->userService->edit($user, $data);
 
         return redirect()->route('users.show', $user);
     }

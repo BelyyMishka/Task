@@ -4,13 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
-use App\Http\Resources\User\UserCollection;
 use App\Http\Resources\User\UserResource;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
@@ -24,13 +21,13 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return UserCollection
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
         $users = $this->userService->all();
 
-        return new UserCollection($users);
+        return UserResource::collection($users);
     }
 
     /**
@@ -41,7 +38,8 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-        $user = $this->userService->add($request);
+        $data = $request->all();
+        $user = $this->userService->add($data);
 
         return new UserResource($user);
     }
@@ -66,7 +64,8 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, User $user)
     {
-        $user = $this->userService->edit($user, $request);
+        $data = $request->all();
+        $user = $this->userService->edit($user, $data);
 
         return new UserResource($user);
     }

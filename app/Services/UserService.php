@@ -16,14 +16,9 @@ class UserService
         return User::all();
     }
 
-    public function getById($id)
+    public function add(array $data)
     {
-        return User::find($id);
-    }
-
-    public function add($request)
-    {
-        return User::add($request);
+        return User::add($data);
     }
 
     public function remove($user)
@@ -36,8 +31,8 @@ class UserService
         return true;
     }
 
-    public function edit($user, $request)
+    public function edit($user, array $data)
     {
-        return $user->edit($request);
+        return $user->edit($data);
     }
 }
