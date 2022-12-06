@@ -6,6 +6,7 @@ use App\Traits\Date;
 use App\Traits\Image;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class Book extends Model
 {
@@ -21,15 +22,15 @@ class Book extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public static function add($request)
+    public static function add(array $data)
     {
         $book = new Book();
-        $book->name = $request->name;
-        $book->description = $request->description;
-        $book->user_id = $request->user_id;
+        $book->name = $data['name'];
+        $book->description = $data['description'];
+        $book->user_id = $data['user_id'];
 
-        if ($request->hasFile('image')) {
-            $path = static::addImage($request->file('image'));
+        if (Arr::has($data, 'image')) {
+            $path = static::addImage($data['image']);
             $book->image = $path;
         }
 
@@ -46,14 +47,14 @@ class Book extends Model
         return true;
     }
 
-    public function edit($request)
+    public function edit(array $data)
     {
-        $this->name = $request->name;
-        $this->description = $request->description;
-        $this->user_id = $request->user_id;
+        $this->name = $data['name'];
+        $this->description = $data['description'];
+        $this->user_id = $data['user_id'];
 
-        if ($request->hasFile('image')) {
-            $path = $this->editImage($request->file('image'));
+        if (Arr::has($data, 'image')) {
+            $path = $this->editImage($data['image']);
             $this->image = $path;
         }
 

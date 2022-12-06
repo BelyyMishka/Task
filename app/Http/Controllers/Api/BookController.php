@@ -4,13 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BookRequest;
-use App\Http\Resources\Book\BookCollection;
 use App\Http\Resources\Book\BookResource;
 use App\Models\Book;
 use App\Services\BookService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class BookController extends Controller
 {
@@ -24,13 +21,13 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return BookCollection
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
         $books = $this->bookService->all();
 
-        return new BookCollection($books);
+        return BookResource::collection($books);
     }
 
     /**
@@ -41,7 +38,8 @@ class BookController extends Controller
      */
     public function store(BookRequest $request)
     {
-        $book = $this->bookService->add($request);
+        $data = $request->all();
+        $book = $this->bookService->add($data);
 
         return new BookResource($book);
     }
@@ -54,8 +52,6 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        $book = $book->load('author');
-
         return new BookResource($book);
     }
 
@@ -68,7 +64,8 @@ class BookController extends Controller
      */
     public function update(BookRequest $request, Book $book)
     {
-        $book = $this->bookService->edit($book, $request);
+        $data = $request->all();
+        $book = $this->bookService->edit($book, $data);
 
         return new BookResource($book);
     }

@@ -16,15 +16,9 @@ class BookService
         return Book::with('author')->get();
     }
 
-    public function getById($id)
+    public function add(array $data)
     {
-        return Book::with('author')->find($id);
-    }
-
-    public function add($request)
-    {
-        $book = Book::add($request);
-        return $book->load('author');
+        return Book::add($data);
     }
 
     public function remove($book)
@@ -33,10 +27,8 @@ class BookService
         return true;
     }
 
-    public function edit($book, $request)
+    public function edit($book, array $data)
     {
-        $book = $book->edit($request);
-
-        return $book->load('author');
+        return $book->edit($data);
     }
 }

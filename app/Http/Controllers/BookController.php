@@ -10,7 +10,6 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
@@ -26,7 +25,7 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return Application|Factory|View
      */
     public function index()
     {
@@ -39,7 +38,7 @@ class BookController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return Application|Factory|View
      */
     public function create()
     {
@@ -57,7 +56,8 @@ class BookController extends Controller
      */
     public function store(BookRequest $request)
     {
-        $this->bookService->add($request);
+        $data = $request->all();
+        $this->bookService->add($data);
 
         return redirect()->route('books.index');
     }
@@ -98,7 +98,8 @@ class BookController extends Controller
      */
     public function update(BookRequest $request, Book $book)
     {
-        $book = $this->bookService->edit($book, $request);
+        $data = $request->all();
+        $book = $this->bookService->edit($book, $data);
 
         return redirect()->route('books.show', $book);
     }
